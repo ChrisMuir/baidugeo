@@ -65,7 +65,7 @@ update_cache_data <- function(coordinate_cache = FALSE,
   if (coordinate_cache) {
     # Save coord_hash_map to file..
     save(
-      bmap_env$coord_hash_map,
+      coord_hash_map,
       file = paste0(system.file("extdata", package = "baidugeo"),
                     "/coordinate_cache.rda"),
       compress = "bzip2", 
@@ -75,7 +75,7 @@ update_cache_data <- function(coordinate_cache = FALSE,
   if (address_cache) {
     # Save addr_hash_map to file..
     save(
-      bmap_env$addr_hash_map,
+      addr_hash_map,
       file = paste0(system.file("extdata", package = "baidugeo"),
                     "/address_cache.rda"),
       compress = "bzip2", 
