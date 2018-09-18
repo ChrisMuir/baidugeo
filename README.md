@@ -1,6 +1,8 @@
 baidugeo
 ========
 
+[![Travis-CI Build Status](https://travis-ci.org/ChrisMuir/baidugeo.svg?branch=master)](https://travis-ci.org/ChrisMuir/baidugeo)
+
 R interface for the Baidu Maps API geocoding services. API docs can be found [here](http://lbsyun.baidu.com/index.php?title=jspopular), [here](http://developer.baidu.com/map/skins/MySkin/resources/iframs/webapi-geocoding.html), and [here](http://lbsyun.baidu.com/index.php?title=car/api/geocoding). Functions are provided for both forward and reverse geocoding. The Baidu Maps API is useful for geolocation of Chinese strings (addresses, business names, locations, etc).
 
 This project initially started as a fork of the [baidumap](https://github.com/badbye/baidumap) package by [Yalei Du](https://github.com/badbye). This package is meant to be a stripped down, simplified version of that package, useful for when all you need is geocoding from Baidu, and with a couple additional features built in. Major differences include:
