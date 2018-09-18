@@ -12,6 +12,8 @@ This project initially started as a fork of the [baidumap](https://github.com/ba
 - Removes multicore processing, so no parallel API calls.
 - Fewer dependencies.
 
+For geolocation of Chinese terms using basic string parsing (no API required), check out my package [geolocChina](https://github.com/ChrisMuir/geolocChina).
+
 ## Install from this repo
 
 ```r
