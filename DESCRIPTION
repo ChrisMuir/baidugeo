@@ -1,0 +1,17 @@
+Package: baidugeo
+Title: Interface to the Baidu Maps API Geocoding Services
+Version: 0.3.0
+Encoding: UTF-8
+Authors@R: person("Chris", "Muir", email = "chrismuirRVA@gmail.com", role = c("aut", "cre"))
+Description: Provides interface to the basic geocoding functions of the Baidu Maps API. 
+  Features forward and reverse geocoding.
+Depends:
+    R (>= 3.0.0)
+Imports:
+    digest,
+    httr,
+    jsonlite,
+    methods
+License: GPL-3
+LazyData: true
+RoxygenNote: 6.0.1.9000
