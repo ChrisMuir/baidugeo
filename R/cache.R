@@ -201,7 +201,11 @@ bmap_get_cached_coord_data <- function() {
   
   for (idx in seq_len(length(keys))) {
     curr_val <- bmap_env$coord_hash_map[[keys[idx]]]
-    json_str <- jsonlite::fromJSON(curr_val[2])
+    if (nzchar(curr_val[2])) {
+      json_str <- jsonlite::fromJSON(curr_val[2])
+    } else {
+      json_str <- NULL
+    }
     
     ## Unpack all of the variables.
     
@@ -323,7 +327,12 @@ bmap_get_cached_address_data <- function() {
   
   for (idx in seq_len(length(keys))) {
     curr_key <- keys[idx]
-    json_str <- jsonlite::fromJSON(bmap_env$addr_hash_map[[curr_key]])
+    res <- bmap_env$addr_hash_map[[curr_key]]
+    if (nzchar(res)) {
+      json_str <- jsonlite::fromJSON(res)
+    } else {
+      json_str <- NULL
+    }
     
     ## Unpack all of the variables.
     
