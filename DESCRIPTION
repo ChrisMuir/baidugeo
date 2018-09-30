@@ -11,7 +11,10 @@ Imports:
     digest,
     httr,
     jsonlite,
-    methods
+    methods,
+    rapidjsonr,
+    Rcpp
 License: GPL-3
 LazyData: true
 RoxygenNote: 6.0.1.9000
+LinkingTo: Rcpp, rapidjsonr

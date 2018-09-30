@@ -11,6 +11,7 @@ This project initially started as a fork of the [baidumap](https://github.com/ba
 - API rate limiting is handled automatically.
 - Removes multicore processing, so no parallel API calls.
 - Fewer dependencies.
+- Uses the [rapidjson](https://github.com/Tencent/rapidjson) C++ header files (via the R packge [rapidjsonr](https://github.com/SymbolixAU/rapidjsonr)) for fast parsing of JSON API return data.
 
 For geolocation of Chinese terms using basic string parsing (no API required), check out my package [geolocChina](https://github.com/ChrisMuir/geolocChina).
 
