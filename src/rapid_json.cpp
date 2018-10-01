@@ -93,6 +93,12 @@ List parse_api_json_coords(Environment& coord_hash_map,
     curr_json = as<std::string>(curr_res[1]);
     doc.Parse(curr_json.c_str());
     
+    if(doc.HasParseError()) {
+      //printf("json parse error: %d at %zu\n", static_cast<int>(doc.GetParseError()), doc.GetErrorOffset());
+      Rcerr << "parse error for json string: "<< curr_json << std::endl;
+      stop("json parse error");
+    }
+    
     //location
     location[i] = curr_res[0];
     
@@ -206,6 +212,12 @@ List parse_api_json_addrs(Environment& addr_hash_map,
     curr_key = as<std::string>(keys[i]);
     curr_json = as<std::string>(addr_hash_map[curr_key]);
     doc.Parse(curr_json.c_str());
+    
+    if(doc.HasParseError()) {
+      //printf("json parse error: %d at %zu\n", static_cast<int>(doc.GetParseError()), doc.GetErrorOffset());
+      Rcerr << "parse error for json string: "<< curr_json << std::endl;
+      stop("json parse error");
+    }
     
     // Input lon and input lat.
     get_coords_from_uri(curr_key, curr_input_lon, curr_input_lat);
