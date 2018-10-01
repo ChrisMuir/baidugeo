@@ -155,19 +155,15 @@ missing_key_msg <- function() {
 #'
 #' @noRd
 invalid_key_msg <- function(api_res) {
-  msg <- tryCatch(jsonlite::fromJSON(api_res), error = function(e) e)
-  if (methods::is(api_res, "error")) {
+  # If api_res is not a valid json string, pass it unedited to the error msg.
+  if (!is_json_parsable(api_res)) {
     msg <- api_res
   } else {
-    if ("message" %in% names(msg)) {
-      msg <- msg$message
-    } else {
-      msg <- msg[grepl("APP.*AK.*", msg)]
-      if (length(msg) < 1) {
-        msg <- "unknown"
-      } else {
-        msg <- msg[[1]]
-      }
+    # Get value from the "message" key in api_res.
+    msg <- get_message_value(api_res)
+    if (!nzchar(msg)) {
+      # If "message" value is empty, make msg "unknown".
+      msg <- "unknown"
     }
   }
   

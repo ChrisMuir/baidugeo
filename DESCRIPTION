@@ -10,7 +10,6 @@ Depends:
 Imports:
     digest,
     httr,
-    jsonlite,
     methods,
     rapidjsonr,
     Rcpp

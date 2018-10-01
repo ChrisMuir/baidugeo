@@ -31,6 +31,36 @@ void get_coords_from_uri(std::string& uri, double& curr_input_lon,
 
 
 // [[Rcpp::export]]
+bool is_json_parsable(const char * json) {
+  rapidjson::Document doc;
+  doc.Parse(json);
+  
+  if(doc.HasParseError()) {
+    return false;
+  }
+  
+  return true;
+}
+
+
+// [[Rcpp::export]]
+std::string get_message_value(const char * json) {
+  rapidjson::Document doc;
+  doc.Parse(json);
+  
+  // confidence
+  std::string out;
+  if(doc.HasMember("message")) {
+    out = doc["message"].GetString();
+  } else {
+    out = "";
+  }
+  
+  return out;
+}
+
+
+// [[Rcpp::export]]
 List from_json(const char* json) {
   rapidjson::Document doc;
   doc.Parse(json);

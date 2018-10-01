@@ -17,6 +17,28 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// is_json_parsable
+bool is_json_parsable(const char * json);
+RcppExport SEXP _baidugeo_is_json_parsable(SEXP jsonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char * >::type json(jsonSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_json_parsable(json));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_message_value
+std::string get_message_value(const char * json);
+RcppExport SEXP _baidugeo_get_message_value(SEXP jsonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char * >::type json(jsonSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_message_value(json));
+    return rcpp_result_gen;
+END_RCPP
+}
 // from_json
 List from_json(const char* json);
 RcppExport SEXP _baidugeo_from_json(SEXP jsonSEXP) {
@@ -55,6 +77,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_baidugeo_get_coords_from_uri", (DL_FUNC) &_baidugeo_get_coords_from_uri, 3},
+    {"_baidugeo_is_json_parsable", (DL_FUNC) &_baidugeo_is_json_parsable, 1},
+    {"_baidugeo_get_message_value", (DL_FUNC) &_baidugeo_get_message_value, 1},
     {"_baidugeo_from_json", (DL_FUNC) &_baidugeo_from_json, 1},
     {"_baidugeo_parse_api_json_coords", (DL_FUNC) &_baidugeo_parse_api_json_coords, 2},
     {"_baidugeo_parse_api_json_addrs", (DL_FUNC) &_baidugeo_parse_api_json_addrs, 2},

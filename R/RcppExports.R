@@ -5,6 +5,14 @@ get_coords_from_uri <- function(uri, curr_input_lon, curr_input_lat) {
     invisible(.Call(`_baidugeo_get_coords_from_uri`, uri, curr_input_lon, curr_input_lat))
 }
 
+is_json_parsable <- function(json) {
+    .Call(`_baidugeo_is_json_parsable`, json)
+}
+
+get_message_value <- function(json) {
+    .Call(`_baidugeo_get_message_value`, json)
+}
+
 from_json <- function(json) {
     .Call(`_baidugeo_from_json`, json)
 }
