@@ -111,7 +111,6 @@ List parse_api_json_coords(Environment& coord_hash_map,
   CharacterVector level(cache_len);
   
   rapidjson::Document doc;
-  rapidjson::Value val;
   CharacterVector curr_res;
   String curr_key;
   std::string curr_json;
@@ -121,7 +120,11 @@ List parse_api_json_coords(Environment& coord_hash_map,
     curr_key = keys[i];
     curr_res = coord_hash_map[curr_key];
     curr_json = as<std::string>(curr_res[1]);
-    doc.Parse(curr_json.c_str());
+    if(curr_json != "") {
+      doc.Parse(curr_json.c_str());
+    } else {
+      doc.Parse("{\"empty\":\"json\"}");
+    }
     
     if(doc.HasParseError()) {
       //printf("json parse error: %d at %zu\n", static_cast<int>(doc.GetParseError()), doc.GetErrorOffset());
@@ -231,7 +234,6 @@ List parse_api_json_addrs(Environment& addr_hash_map,
   CharacterVector city_code(cache_len);
   
   rapidjson::Document doc;
-  rapidjson::Value val;
   std::string curr_key;
   std::string curr_json;
   double curr_input_lon;
@@ -241,7 +243,11 @@ List parse_api_json_addrs(Environment& addr_hash_map,
   for(int i = 0; i < cache_len; ++i) {
     curr_key = as<std::string>(keys[i]);
     curr_json = as<std::string>(addr_hash_map[curr_key]);
-    doc.Parse(curr_json.c_str());
+    if(curr_json != "") {
+      doc.Parse(curr_json.c_str());
+    } else {
+      doc.Parse("{\"empty\":\"json\"}");
+    }
     
     if(doc.HasParseError()) {
       //printf("json parse error: %d at %zu\n", static_cast<int>(doc.GetParseError()), doc.GetErrorOffset());
