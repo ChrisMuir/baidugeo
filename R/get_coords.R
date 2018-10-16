@@ -33,7 +33,6 @@
 #' }
 #' @useDynLib baidugeo, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
-#' @import rapidjsonr
 bmap_get_coords <- function(location, force = FALSE, skip_short_str = FALSE, 
                             cache_chunk_size = NULL) {
   # Input validation.
