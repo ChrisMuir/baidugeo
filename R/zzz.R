@@ -10,3 +10,7 @@ assign("time_of_last_query", Sys.time(), envir = bmap_env)
 # Initialize placeholders for package data within bmap_env.
 assign("coord_hash_map", NULL, envir = bmap_env)
 assign("addr_hash_map", NULL, envir = bmap_env)
+
+# Initialize global variables to keep R CMD Check happy.
+coord_hash_map <- NULL
+addr_hash_map <- NULL
