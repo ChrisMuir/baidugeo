@@ -6,6 +6,84 @@
 using namespace Rcpp;
 
 
+namespace global_vars {
+  rapidjson::Document doc;
+  //std::string curr_json;
+  NumericVector status;
+  NumericVector lng;
+  NumericVector lat;
+  IntegerVector precise;
+  IntegerVector confidence;
+  NumericVector comprehension;
+  String level;
+}
+
+
+// Get coords data from the json of a single API request.
+void from_json_coords(std::string json) {
+  if(json != "") {
+    global_vars::doc.Parse(json.c_str());
+  } else {
+    global_vars::doc.Parse("{\"empty\":\"json\"}");
+  }
+  
+  if(global_vars::doc.HasParseError()) {
+    //printf("json parse error: %d at %zu\n", static_cast<int>(doc.GetParseError()), doc.GetErrorOffset());
+    Rcerr << "parse error for json string: "<< json << std::endl;
+    stop("json parse error");
+  }
+  
+  // status
+  if(global_vars::doc.HasMember("status")) {
+    global_vars::status[0] = global_vars::doc["status"].GetDouble();
+  } else {
+    global_vars::status[0] = NA_REAL;
+  }
+  
+  // longitude
+  if(global_vars::doc["result"]["location"].HasMember("lng")) {
+    global_vars::lng[0] = global_vars::doc["result"]["location"]["lng"].GetDouble();
+  } else {
+    global_vars::lng[0] = NA_REAL;
+  }
+  
+  // latitude
+  if(global_vars::doc["result"]["location"].HasMember("lat")) {
+    global_vars::lat[0] = global_vars::doc["result"]["location"]["lat"].GetDouble();
+  } else {
+    global_vars::lat[0] = NA_REAL;
+  }
+  
+  // precise
+  if(global_vars::doc["result"].HasMember("precise")) {
+    global_vars::precise[0] = global_vars::doc["result"]["precise"].GetInt();
+  } else {
+    global_vars::precise[0] = NA_INTEGER;
+  }
+  
+  // confidence
+  if(global_vars::doc["result"].HasMember("confidence")) {
+    global_vars::confidence[0] = global_vars::doc["result"]["confidence"].GetInt();
+  } else {
+    global_vars::confidence[0] = NA_INTEGER;
+  }
+  
+  // comprehension
+  if(global_vars::doc["result"].HasMember("comprehension")) {
+    global_vars::comprehension[0] = global_vars::doc["result"]["comprehension"].GetDouble();
+  } else {
+    global_vars::comprehension[0] = NA_REAL;
+  }
+  
+  // level
+  if(global_vars::doc["result"].HasMember("level")) {
+    global_vars::level = global_vars::doc["result"]["level"].GetString();
+  } else {
+    global_vars::level = NA_STRING;
+  }
+}
+
+
 // Extract lon and lat as doubles from a uri string.
 // Input uri's look like this:
 // "http://api.map.baidu.com/geocoder/v2/?ak=%s&location=30.61,114.27&output=json&pois=0"
@@ -61,45 +139,52 @@ std::string get_message_value(const char * json) {
 
 
 // [[Rcpp::export]]
-List from_json(const char* json) {
-  rapidjson::Document doc;
-  doc.Parse(json);
+List from_json_coords_vector (CharacterVector location, 
+                              std::vector<std::string> json_vect) {
+  int json_len = json_vect.size();
+  NumericVector status(json_len);
+  NumericVector lng(json_len);
+  NumericVector lat(json_len);
+  IntegerVector precise(json_len);
+  IntegerVector confidence(json_len);
+  NumericVector comprehension(json_len);
+  CharacterVector level(json_len);
   
-  if(doc.HasParseError()) {
-    //printf("json parse error: %d at %zu\n", static_cast<int>(doc.GetParseError()), doc.GetErrorOffset());
-    Rcerr << "parse error for json string: "<< json << std::endl;
-    stop("json parse error");
+  for(int i = 0; i < json_len; ++i) {
+    // Parse json, assign values from the parsed json.
+    from_json_coords(json_vect[i]);
+    status[i] = global_vars::status[0];
+    lng[i] = global_vars::lng[0];
+    lat[i] = global_vars::lat[0];
+    precise[i] = global_vars::precise[0];
+    confidence[i] = global_vars::confidence[0];
+    comprehension[i] = global_vars::comprehension[0];
+    level[i] = global_vars::level;
   }
   
-  double lng;
-  double lat;
-  
-  // longitude
-  if(doc["result"]["location"].HasMember("lng")) {
-    lng = doc["result"]["location"]["lng"].GetDouble();
-  } else {
-    lng = NA_REAL;
-  }
-  
-  // latitude
-  if(doc["result"]["location"].HasMember("lat")) {
-    lat = doc["result"]["location"]["lat"].GetDouble();
-  } else {
-    lat = NA_REAL;
-  }
-  
+  // Create List output that has the necessary attributes to make it a
+  // data.frame object.
   List out = List::create(
+    Named("location") = location,
+    Named("status") = status,
     Named("lon") = lng,
-    Named("lat") = lat
+    Named("lat") = lat,
+    Named("presice") = precise,
+    Named("confidence") = confidence,
+    Named("comprehension") = comprehension,
+    Named("level") = level
   );
+  
+  out.attr("class") = "data.frame";
+  out.attr("row.names") = seq(1, json_len);
   
   return out;
 }
 
 
 // [[Rcpp::export]]
-List parse_api_json_coords(Environment& coord_hash_map,
-                           CharacterVector& keys) {
+List get_coords_pkg_data(Environment& coord_hash_map,
+                         CharacterVector& keys) {
   int cache_len = Rf_length(coord_hash_map);
   CharacterVector location(cache_len);
   NumericVector status(cache_len);
@@ -110,79 +195,26 @@ List parse_api_json_coords(Environment& coord_hash_map,
   NumericVector comprehension(cache_len);
   CharacterVector level(cache_len);
   
-  rapidjson::Document doc;
   CharacterVector curr_res;
   String curr_key;
-  std::string curr_json;
-  
+
   for(int i = 0; i < cache_len; ++i) {
     
     curr_key = keys[i];
     curr_res = coord_hash_map[curr_key];
-    curr_json = as<std::string>(curr_res[1]);
-    if(curr_json != "") {
-      doc.Parse(curr_json.c_str());
-    } else {
-      doc.Parse("{\"empty\":\"json\"}");
-    }
-    
-    if(doc.HasParseError()) {
-      //printf("json parse error: %d at %zu\n", static_cast<int>(doc.GetParseError()), doc.GetErrorOffset());
-      Rcerr << "parse error for json string: "<< curr_json << std::endl;
-      stop("json parse error");
-    }
-    
+
     //location
     location[i] = curr_res[0];
     
-    // status
-    if(doc.HasMember("status")) {
-      status[i] = doc["status"].GetDouble();
-    } else {
-      status[i] = NA_REAL;
-    }
-    
-    // longitude
-    if(doc["result"]["location"].HasMember("lng")) {
-      lng[i] = doc["result"]["location"]["lng"].GetDouble();
-    } else {
-      lng[i] = NA_REAL;
-    }
-    
-    // latitude
-    if(doc["result"]["location"].HasMember("lat")) {
-      lat[i] = doc["result"]["location"]["lat"].GetDouble();
-    } else {
-      lat[i] = NA_REAL;
-    }
-    
-    // precise
-    if(doc["result"].HasMember("precise")) {
-      precise[i] = doc["result"]["precise"].GetInt();
-    } else {
-      precise[i] = NA_INTEGER;
-    }
-    
-    // confidence
-    if(doc["result"].HasMember("confidence")) {
-      confidence[i] = doc["result"]["confidence"].GetInt();
-    } else {
-      confidence[i] = NA_INTEGER;
-    }
-    
-    // comprehension
-    if(doc["result"].HasMember("comprehension")) {
-      comprehension[i] = doc["result"]["comprehension"].GetDouble();
-    } else {
-      comprehension[i] = NA_REAL;
-    }
-    
-    // level
-    if(doc["result"].HasMember("level")) {
-      level[i] = doc["result"]["level"].GetString();
-    } else {
-      level[i] = NA_STRING;
-    }
+    // Parse json, assign values from the parsed json.
+    from_json_coords(as<std::string>(curr_res[1]));
+    status[i] = global_vars::status[0];
+    lng[i] = global_vars::lng[0];
+    lat[i] = global_vars::lat[0];
+    precise[i] = global_vars::precise[0];
+    confidence[i] = global_vars::confidence[0];
+    comprehension[i] = global_vars::comprehension[0];
+    level[i] = global_vars::level;
   }
   
   // Create List output that has the necessary attributes to make it a
@@ -206,8 +238,8 @@ List parse_api_json_coords(Environment& coord_hash_map,
 
 
 // [[Rcpp::export]]
-List parse_api_json_addrs(Environment& addr_hash_map,
-                          CharacterVector& keys) {
+List get_addrs_pkg_data(Environment& addr_hash_map,
+                        CharacterVector& keys) {
   int cache_len = keys.size();
   NumericVector input_lon(cache_len);
   NumericVector input_lat(cache_len);

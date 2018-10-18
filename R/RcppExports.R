@@ -13,15 +13,15 @@ get_message_value <- function(json) {
     .Call(`_baidugeo_get_message_value`, json)
 }
 
-from_json <- function(json) {
-    .Call(`_baidugeo_from_json`, json)
+from_json_coords_vector <- function(location, json_vect) {
+    .Call(`_baidugeo_from_json_coords_vector`, location, json_vect)
 }
 
-parse_api_json_coords <- function(coord_hash_map, keys) {
-    .Call(`_baidugeo_parse_api_json_coords`, coord_hash_map, keys)
+get_coords_pkg_data <- function(coord_hash_map, keys) {
+    .Call(`_baidugeo_get_coords_pkg_data`, coord_hash_map, keys)
 }
 
-parse_api_json_addrs <- function(addr_hash_map, keys) {
-    .Call(`_baidugeo_parse_api_json_addrs`, addr_hash_map, keys)
+get_addrs_pkg_data <- function(addr_hash_map, keys) {
+    .Call(`_baidugeo_get_addrs_pkg_data`, addr_hash_map, keys)
 }
 

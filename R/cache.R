@@ -182,8 +182,8 @@ bmap_get_cached_coord_data <- function() {
   # Load the cache coordinates data set.
   load_coord_cache()
   
-  parse_api_json_coords(bmap_env$coord_hash_map, 
-                        names(bmap_env$coord_hash_map))
+  get_coords_pkg_data(bmap_env$coord_hash_map, 
+                      names(bmap_env$coord_hash_map))
 }
 
 #' Get Cached Address Data
@@ -200,6 +200,6 @@ bmap_get_cached_address_data <- function() {
   # Load the cache address data set.
   load_address_cache()
   
-  parse_api_json_addrs(bmap_env$addr_hash_map, 
-                       names(bmap_env$addr_hash_map))
+  get_addrs_pkg_data(bmap_env$addr_hash_map, 
+                     names(bmap_env$addr_hash_map))
 }

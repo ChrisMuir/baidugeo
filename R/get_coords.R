@@ -6,6 +6,9 @@
 #' object, to avoid sending the same query to Baidu twice.
 #'
 #' @param location char vector, vector of locations.
+#' @param type string, dictates the return data type. Valid inputs are 
+#'   \code{data.frame}, which will return a data.frame, or \code{json}, which 
+#'   will return a vector of json strings.
 #' @param force logical, force online query, even if previously downloaded and 
 #'   saved to the data dictionary.
 #' @param skip_short_str logical, if TRUE then any input strings with length 
@@ -33,10 +36,12 @@
 #' }
 #' @useDynLib baidugeo, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
-bmap_get_coords <- function(location, force = FALSE, skip_short_str = FALSE, 
+bmap_get_coords <- function(location, type = c("data.frame", "json"), 
+                            force = FALSE, skip_short_str = FALSE, 
                             cache_chunk_size = NULL) {
   # Input validation.
   stopifnot(is.character(location))
+  type <- match.arg(type)
   stopifnot(is.logical(force))
   stopifnot(is.logical(skip_short_str))
   stopifnot(is.integer(cache_chunk_size) || is.null(cache_chunk_size))
@@ -158,10 +163,18 @@ bmap_get_coords <- function(location, force = FALSE, skip_short_str = FALSE,
     update_cache_data(coordinate_cache = TRUE)
   }
   
-  # Assign attributes to the output vector.
+  # If "out_msg" doesn't exist, create it.
   if (!exists("out_msg", inherits = FALSE)) {
     out_msg <- "all queries completed"
   }
+  
+  # If input arg "type" is data.frame, parse the vector of json strings, 
+  # extract data into a data frame.
+  if (type == "data.frame") {
+    out <- from_json_coords_vector(location, out)
+  }
+  
+  # Assign attributes to the output object.
   attributes(out)$msg <- out_msg
   attributes(out)$daily_queries_remaining <- bmap_remaining_daily_queries()
   attributes(out)$key_used <- bmap_env$bmap_key

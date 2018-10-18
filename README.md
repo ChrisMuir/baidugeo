@@ -53,7 +53,7 @@ bmap_rate_limit_info()
 ## Package Data
 Functions `bmap_get_coords()` and `bmap_get_location()` both cache API return data. The functions will first look for the return data in the cached package datasets, if it's not found there they will execute an API request.
 
-Please note, when installed from this repo, the package comes with cached data objects for both coordinates and addresses. If you wish to clear those objects after install, use function `bmap_clear_cache()`:
+Use function `bmap_clear_cache()` to clear either of the package cache data sets (or both at once).
 ```r
 bmap_clear_cache(coordinate_cache = TRUE, address_cache = TRUE)
 ```
@@ -67,19 +67,19 @@ locs <- c(
   "成都高梁红餐饮管理有限公司"
 )
 
-coords <- bmap_get_coords(locs)
+# bmap_get_coords() returns a data frame by default.
+bmap_get_coords(locs)
+#>                           location status      lon      lat presice confidence comprehension   level
+#> 1     中百超市有限公司长堤街二分店      0 114.2729 30.61617       1         80            95 UNKNOWN
+#> 2 浙江省杭州市余杭区径山镇小古城村      0 119.8783 30.39625       0         30           100    乡镇
+#> 3       成都高梁红餐饮管理有限公司      0 104.0679 30.67994       0         12            29    城市
 
-# bmap_get_coords() returns json string objects.
-coords
+
+# Use arg "type" to return a vector of json strings.
+bmap_get_coords(locs, type = "json")
 #> [1] "{\"status\":0,\"result\":{\"location\":{\"lng\":114.27287244473057,\"lat\":30.616167082550779},\"precise\":1,\"confidence\":80,\"comprehension\":95,\"level\":\"UNKNOWN\"}}"
-#> [2] "{\"status\":0,\"result\":{\"location\":{\"lng\":119.87833669326516,\"lat\":30.39624844375698},\"precise\":0,\"confidence\":30,\"comprehension\":100,\"level\":\"乡镇\"}}"   
-#> [3] "{\"status\":0,\"result\":{\"location\":{\"lng\":104.06792346330406,\"lat\":30.679942845419565},\"precise\":0,\"confidence\":12,\"comprehension\":29,\"level\":\"城市\"}}"   
-#> attr(,"msg")
-#> [1] "all queries completed"
-#> attr(,"daily_queries_remaining")
-#> [1] 19997
-#> attr(,"key_used")
-#> [1] "some_valid_key_str"
+#> [2] "{\"status\":0,\"result\":{\"location\":{\"lng\":119.87833669326516,\"lat\":30.39624844375698},\"precise\":0,\"confidence\":30,\"comprehension\":100,\"level\":\"乡镇\"}}"
+#> [3] "{\"status\":0,\"result\":{\"location\":{\"lng\":104.06792346330406,\"lat\":30.679942845419565},\"precise\":0,\"confidence\":12,\"comprehension\":29,\"level\":\"城市\"}}"
 ```
 
 Use function `bmap_get_cached_coord_data()` to load all of the cached lat/lon return data as a tidy data frame. The lat and lon of each query can be accessed from this data frame, along with return variables `status`, `precise`, `confidence`, `comphrehension`, and `level`.

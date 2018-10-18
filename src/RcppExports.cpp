@@ -39,38 +39,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// from_json
-List from_json(const char* json);
-RcppExport SEXP _baidugeo_from_json(SEXP jsonSEXP) {
+// from_json_coords_vector
+List from_json_coords_vector(CharacterVector location, std::vector<std::string> json_vect);
+RcppExport SEXP _baidugeo_from_json_coords_vector(SEXP locationSEXP, SEXP json_vectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const char* >::type json(jsonSEXP);
-    rcpp_result_gen = Rcpp::wrap(from_json(json));
+    Rcpp::traits::input_parameter< CharacterVector >::type location(locationSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type json_vect(json_vectSEXP);
+    rcpp_result_gen = Rcpp::wrap(from_json_coords_vector(location, json_vect));
     return rcpp_result_gen;
 END_RCPP
 }
-// parse_api_json_coords
-List parse_api_json_coords(Environment& coord_hash_map, CharacterVector& keys);
-RcppExport SEXP _baidugeo_parse_api_json_coords(SEXP coord_hash_mapSEXP, SEXP keysSEXP) {
+// get_coords_pkg_data
+List get_coords_pkg_data(Environment& coord_hash_map, CharacterVector& keys);
+RcppExport SEXP _baidugeo_get_coords_pkg_data(SEXP coord_hash_mapSEXP, SEXP keysSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment& >::type coord_hash_map(coord_hash_mapSEXP);
     Rcpp::traits::input_parameter< CharacterVector& >::type keys(keysSEXP);
-    rcpp_result_gen = Rcpp::wrap(parse_api_json_coords(coord_hash_map, keys));
+    rcpp_result_gen = Rcpp::wrap(get_coords_pkg_data(coord_hash_map, keys));
     return rcpp_result_gen;
 END_RCPP
 }
-// parse_api_json_addrs
-List parse_api_json_addrs(Environment& addr_hash_map, CharacterVector& keys);
-RcppExport SEXP _baidugeo_parse_api_json_addrs(SEXP addr_hash_mapSEXP, SEXP keysSEXP) {
+// get_addrs_pkg_data
+List get_addrs_pkg_data(Environment& addr_hash_map, CharacterVector& keys);
+RcppExport SEXP _baidugeo_get_addrs_pkg_data(SEXP addr_hash_mapSEXP, SEXP keysSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment& >::type addr_hash_map(addr_hash_mapSEXP);
     Rcpp::traits::input_parameter< CharacterVector& >::type keys(keysSEXP);
-    rcpp_result_gen = Rcpp::wrap(parse_api_json_addrs(addr_hash_map, keys));
+    rcpp_result_gen = Rcpp::wrap(get_addrs_pkg_data(addr_hash_map, keys));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -79,9 +80,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_baidugeo_get_coords_from_uri", (DL_FUNC) &_baidugeo_get_coords_from_uri, 3},
     {"_baidugeo_is_json_parsable", (DL_FUNC) &_baidugeo_is_json_parsable, 1},
     {"_baidugeo_get_message_value", (DL_FUNC) &_baidugeo_get_message_value, 1},
-    {"_baidugeo_from_json", (DL_FUNC) &_baidugeo_from_json, 1},
-    {"_baidugeo_parse_api_json_coords", (DL_FUNC) &_baidugeo_parse_api_json_coords, 2},
-    {"_baidugeo_parse_api_json_addrs", (DL_FUNC) &_baidugeo_parse_api_json_addrs, 2},
+    {"_baidugeo_from_json_coords_vector", (DL_FUNC) &_baidugeo_from_json_coords_vector, 2},
+    {"_baidugeo_get_coords_pkg_data", (DL_FUNC) &_baidugeo_get_coords_pkg_data, 2},
+    {"_baidugeo_get_addrs_pkg_data", (DL_FUNC) &_baidugeo_get_addrs_pkg_data, 2},
     {NULL, NULL, 0}
 };
 
