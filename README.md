@@ -69,10 +69,10 @@ locs <- c(
 
 # bmap_get_coords() returns a data frame by default.
 bmap_get_coords(locs)
-#>                           location status      lon      lat presice confidence comprehension   level
-#> 1     中百超市有限公司长堤街二分店      0 114.2729 30.61617       1         80            95 UNKNOWN
-#> 2 浙江省杭州市余杭区径山镇小古城村      0 119.8783 30.39625       0         30           100    乡镇
-#> 3       成都高梁红餐饮管理有限公司      0 104.0679 30.67994       0         12            29    城市
+#>                 location      lon      lat status presice confidence comprehension   level
+#> 1     中百超市有限公司长堤街二分店 114.2729 30.61617      0       1         80            95 UNKNOWN
+#> 2 浙江省杭州市余杭区径山镇小古城村 119.8783 30.39625      0       0         30           100    乡镇
+#> 3       成都高梁红餐饮管理有限公司 104.0679 30.67994      0       0         12            29    城市
 
 
 # Use arg "type" to return a vector of json strings.
@@ -84,13 +84,11 @@ bmap_get_coords(locs, type = "json")
 
 Use function `bmap_get_cached_coord_data()` to load all of the cached lat/lon return data as a tidy data frame. The lat and lon of each query can be accessed from this data frame, along with return variables `status`, `precise`, `confidence`, `comphrehension`, and `level`.
 ```r
-coords_df <- bmap_get_cached_coord_data()
-
-coords_df
-#>                          location      lon      lat   status precise confidence comprehension    level
-#> 1      中百超市有限公司长堤街二分店 114.2729 30.61617      0      1         80            NA      UNKNOWN
-#> 2  浙江省杭州市余杭区径山镇小古城村 119.8783 30.39625      0      0         30            NA         乡镇
-#> 3        成都高梁红餐饮管理有限公司 104.0679 30.67994      0      0         12            NA         城市
+bmap_get_cached_coord_data()
+#>                 location      lon      lat status presice confidence comprehension   level
+#> 1     中百超市有限公司长堤街二分店 114.2729 30.61617      0       1         80            95 UNKNOWN
+#> 2 浙江省杭州市余杭区径山镇小古城村 119.8783 30.39625      0       0         30           100    乡镇
+#> 3       成都高梁红餐饮管理有限公司 104.0679 30.67994      0       0         12            29    城市
 ```
 
 ## Reverse Geocoding

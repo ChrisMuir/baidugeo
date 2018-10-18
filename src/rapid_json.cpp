@@ -166,9 +166,9 @@ List from_json_coords_vector (CharacterVector location,
   // data.frame object.
   List out = List::create(
     Named("location") = location,
-    Named("status") = status,
     Named("lon") = lng,
     Named("lat") = lat,
+    Named("status") = status,
     Named("presice") = precise,
     Named("confidence") = confidence,
     Named("comprehension") = comprehension,
@@ -221,9 +221,9 @@ List get_coords_pkg_data(Environment& coord_hash_map,
   // data.frame object.
   List out = List::create(
     Named("location") = location,
-    Named("status") = status,
     Named("lon") = lng,
     Named("lat") = lat,
+    Named("status") = status,
     Named("presice") = precise,
     Named("confidence") = confidence,
     Named("comprehension") = comprehension,
