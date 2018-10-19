@@ -33,6 +33,9 @@ load_coord_cache <- function() {
                                   package = "baidugeo")
     if (file.exists(coord_hash_map)) {
       load(coord_hash_map, envir = bmap_env)
+      if (is.null(bmap_env$coord_hash_map)) {
+        assign("coord_hash_map", new.env(), envir = bmap_env)
+      }
     } else {
       warning("Cannot identify package data file 'coordinate_cache.rda'")
     }
@@ -50,6 +53,9 @@ load_address_cache <- function() {
                                  package = "baidugeo")
     if (file.exists(addr_hash_map)) {
       load(addr_hash_map, envir = bmap_env)
+      if (is.null(bmap_env$addr_hash_map)) {
+        assign("addr_hash_map", new.env(), envir = bmap_env)
+      }
     } else {
       warning("Cannot identify package data file 'address_cache.rda'")
     }
