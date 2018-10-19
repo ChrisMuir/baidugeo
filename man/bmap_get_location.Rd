@@ -4,12 +4,17 @@
 \alias{bmap_get_location}
 \title{Get Location for a Vector of lat/lon coordinates.}
 \usage{
-bmap_get_location(lat, lon, force = FALSE, cache_chunk_size = NULL)
+bmap_get_location(lat, lon, type = c("data.frame", "json"),
+  force = FALSE, cache_chunk_size = NULL)
 }
 \arguments{
 \item{lat}{numeric vector, vector of latitude values.}
 
 \item{lon}{numeric vector, vector of longitude values.}
+
+\item{type}{string, dictates the return data type. Valid inputs are 
+\code{data.frame}, which will return a data.frame, or \code{json}, which 
+will return a vector of json strings.}
 
 \item{force}{logical, force online query, even if previously downloaded and 
 saved to the data dictionary.}

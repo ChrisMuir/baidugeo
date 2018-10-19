@@ -5,37 +5,28 @@
 
 using namespace Rcpp;
 
-// get_coords_from_uri
-void get_coords_from_uri(std::string& uri, double& curr_input_lon, double& curr_input_lat);
-RcppExport SEXP _baidugeo_get_coords_from_uri(SEXP uriSEXP, SEXP curr_input_lonSEXP, SEXP curr_input_latSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string& >::type uri(uriSEXP);
-    Rcpp::traits::input_parameter< double& >::type curr_input_lon(curr_input_lonSEXP);
-    Rcpp::traits::input_parameter< double& >::type curr_input_lat(curr_input_latSEXP);
-    get_coords_from_uri(uri, curr_input_lon, curr_input_lat);
-    return R_NilValue;
-END_RCPP
-}
-// is_json_parsable
-bool is_json_parsable(const char * json);
-RcppExport SEXP _baidugeo_is_json_parsable(SEXP jsonSEXP) {
+// from_json_addrs_vector
+List from_json_addrs_vector(NumericVector lng, NumericVector lat, std::vector<std::string> json_vect);
+RcppExport SEXP _baidugeo_from_json_addrs_vector(SEXP lngSEXP, SEXP latSEXP, SEXP json_vectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const char * >::type json(jsonSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_json_parsable(json));
+    Rcpp::traits::input_parameter< NumericVector >::type lng(lngSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lat(latSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type json_vect(json_vectSEXP);
+    rcpp_result_gen = Rcpp::wrap(from_json_addrs_vector(lng, lat, json_vect));
     return rcpp_result_gen;
 END_RCPP
 }
-// get_message_value
-std::string get_message_value(const char * json);
-RcppExport SEXP _baidugeo_get_message_value(SEXP jsonSEXP) {
+// get_addrs_pkg_data
+List get_addrs_pkg_data(Environment& addr_hash_map, CharacterVector& keys);
+RcppExport SEXP _baidugeo_get_addrs_pkg_data(SEXP addr_hash_mapSEXP, SEXP keysSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const char * >::type json(jsonSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_message_value(json));
+    Rcpp::traits::input_parameter< Environment& >::type addr_hash_map(addr_hash_mapSEXP);
+    Rcpp::traits::input_parameter< CharacterVector& >::type keys(keysSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_addrs_pkg_data(addr_hash_map, keys));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -63,26 +54,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_addrs_pkg_data
-List get_addrs_pkg_data(Environment& addr_hash_map, CharacterVector& keys);
-RcppExport SEXP _baidugeo_get_addrs_pkg_data(SEXP addr_hash_mapSEXP, SEXP keysSEXP) {
+// is_json_parsable
+bool is_json_parsable(const char * json);
+RcppExport SEXP _baidugeo_is_json_parsable(SEXP jsonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Environment& >::type addr_hash_map(addr_hash_mapSEXP);
-    Rcpp::traits::input_parameter< CharacterVector& >::type keys(keysSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_addrs_pkg_data(addr_hash_map, keys));
+    Rcpp::traits::input_parameter< const char * >::type json(jsonSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_json_parsable(json));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_message_value
+std::string get_message_value(const char * json);
+RcppExport SEXP _baidugeo_get_message_value(SEXP jsonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char * >::type json(jsonSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_message_value(json));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_baidugeo_get_coords_from_uri", (DL_FUNC) &_baidugeo_get_coords_from_uri, 3},
-    {"_baidugeo_is_json_parsable", (DL_FUNC) &_baidugeo_is_json_parsable, 1},
-    {"_baidugeo_get_message_value", (DL_FUNC) &_baidugeo_get_message_value, 1},
+    {"_baidugeo_from_json_addrs_vector", (DL_FUNC) &_baidugeo_from_json_addrs_vector, 3},
+    {"_baidugeo_get_addrs_pkg_data", (DL_FUNC) &_baidugeo_get_addrs_pkg_data, 2},
     {"_baidugeo_from_json_coords_vector", (DL_FUNC) &_baidugeo_from_json_coords_vector, 2},
     {"_baidugeo_get_coords_pkg_data", (DL_FUNC) &_baidugeo_get_coords_pkg_data, 2},
-    {"_baidugeo_get_addrs_pkg_data", (DL_FUNC) &_baidugeo_get_addrs_pkg_data, 2},
+    {"_baidugeo_is_json_parsable", (DL_FUNC) &_baidugeo_is_json_parsable, 1},
+    {"_baidugeo_get_message_value", (DL_FUNC) &_baidugeo_get_message_value, 1},
     {NULL, NULL, 0}
 };
 

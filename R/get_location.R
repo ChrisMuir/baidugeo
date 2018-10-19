@@ -8,6 +8,9 @@
 #'
 #' @param lat numeric vector, vector of latitude values.
 #' @param lon numeric vector, vector of longitude values.
+#' @param type string, dictates the return data type. Valid inputs are 
+#'   \code{data.frame}, which will return a data.frame, or \code{json}, which 
+#'   will return a vector of json strings.
 #' @param force logical, force online query, even if previously downloaded and 
 #'   saved to the data dictionary.
 #' @param cache_chunk_size integer, indicates how often you want the API return
@@ -33,10 +36,12 @@
 #' 
 #' bmap_get_location(lat, lon)
 #' }
-bmap_get_location <- function(lat, lon, force = FALSE, cache_chunk_size = NULL) {
+bmap_get_location <- function(lat, lon, type = c("data.frame", "json"), 
+                              force = FALSE, cache_chunk_size = NULL) {
   # Input validation.
   stopifnot(is.numeric(lat))
   stopifnot(is.numeric(lon))
+  type <- match.arg(type)
   stopifnot(is.logical(force))
   stopifnot(is.integer(cache_chunk_size) || is.null(cache_chunk_size))
   
@@ -148,10 +153,18 @@ bmap_get_location <- function(lat, lon, force = FALSE, cache_chunk_size = NULL) 
     update_cache_data(address_cache = TRUE)
   }
   
-  # Assign attributes to the output vector.
+  # If "out_msg" doesn't exist, create it.
   if (!exists("out_msg", inherits = FALSE)) {
     out_msg <- "all queries completed"
   }
+  
+  # If input arg "type" is data.frame, parse the vector of json strings, 
+  # extract data into a data frame.
+  if (type == "data.frame") {
+    out <- from_json_addrs_vector(lon, lat, out)
+  }
+  
+  # Assign attributes to the output object.
   attributes(out)$msg <- out_msg
   attributes(out)$daily_queries_remaining <- bmap_remaining_daily_queries()
   attributes(out)$key_used <- bmap_env$bmap_key
