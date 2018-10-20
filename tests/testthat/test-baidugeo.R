@@ -14,3 +14,22 @@ test_that("setting rate limit is successful", {
   expect_equal(get("bmap_daily_rate_limit", envir = baidugeo:::bmap_env), 
                20000L)
 })
+
+
+context("bmap_remaining_daily_queries")
+
+test_that("bmap_remaining_daily_queries is successful", {
+  expect_equal(bmap_remaining_daily_queries(), 20000L)
+})
+
+
+context("invalid_key_msg")
+
+test_that("invalid key msg is correct", {
+  expect_equal(
+    invalid_key_msg('{\"message\":\"len of str is 3 or fewer chars\"}'), 
+    paste0("API key is invalid. Current API key: some_valid_key_str\n    ", 
+           "Response from the API:\n    ", 
+           "len of str is 3 or fewer chars")
+  )
+})
