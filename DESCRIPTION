@@ -16,3 +16,4 @@ License: GPL-3
 LazyData: true
 RoxygenNote: 6.1.0
 LinkingTo: Rcpp, rapidjsonr
+Suggests: knitr
