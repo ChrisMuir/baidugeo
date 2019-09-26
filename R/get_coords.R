@@ -6,6 +6,10 @@
 #' object, to avoid sending the same query to Baidu twice.
 #'
 #' @param location char vector, vector of locations.
+#' @param city char vector, vector of city names to add to the api query, 
+#'  indicating the city in which the \code{location} exists. This is an 
+#'  optional arg, default value is \code{NULL}. If a vector is passed, the 
+#'  length must match that of \code{location}.
 #' @param type string, dictates the return data type. Valid inputs are 
 #'   \code{data.frame}, which will return a data.frame, or \code{json}, which 
 #'   will return a vector of json strings.
@@ -36,11 +40,17 @@
 #' }
 #' @useDynLib baidugeo, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
-bmap_get_coords <- function(location, type = c("data.frame", "json"), 
+bmap_get_coords <- function(location, city = NULL, type = c("data.frame", "json"), 
                             force = FALSE, skip_short_str = FALSE, 
                             cache_chunk_size = NULL) {
   # Input validation.
   stopifnot(is.character(location))
+  stopifnot(is.null(city) || is.character(city))
+  if (!is.null(city)) {
+    stopifnot(length(location) == length(city))
+  } else {
+    null_str <- "NULL"
+  }
   type <- match.arg(type)
   stopifnot(is.logical(force))
   stopifnot(is.logical(skip_short_str))
@@ -93,27 +103,35 @@ bmap_get_coords <- function(location, type = c("data.frame", "json"),
     # If the current location is NA or NULL, return "NA".
     if (is.null(location[x]) || is.na(location[x])) {
       out[x] <- NA
-    
-    # if x in saved_coords & force == FALSE, look up x in coord_hash_map 
-    # and return json obj.
+      
+      # if x in saved_coords & force == FALSE, look up x in coord_hash_map 
+      # and return json obj.
     } else if (!force && !is.null(curr_hash)) {
       out[x] <- curr_hash[2]
-    
-    # elif skip_short_str == TRUE & nchar(x) <= 3, return custom json obj.
+      
+      # elif skip_short_str == TRUE & nchar(x) <= 3, return custom json obj.
     } else if (skip_short_str && nchar(location[x]) <= 3) {
       res <- paste0('{\"status\":6,\"msg\":\"len of str is 3 or', 
                     ' fewer chars\",\"results\":[]}')
       out[x] <- res
-      insert_coord_hash_map(location[x], res)
-    
-    # else sent query to Baidu Maps API to get coordinates. Result will be 
-    # returned as a json text obj, and saved to the data dictionary.
+      if (is.null(city)) {
+        insert_coord_hash_map(paste0(location[x], "city:", null_str), res)
+      } else {
+        insert_coord_hash_map(paste0(location[x], "city:", city[x]), res)
+      }
+      
+      # else sent query to Baidu Maps API to get coordinates. Result will be 
+      # returned as a json text obj, and saved to the data dictionary.
     } else {
       # Time stamp the current api query.
       assign("time_of_last_query", Sys.time(), envir = bmap_env)
       
       # Perform API query.
-      res <- baidu_coord_query(location[x])
+      if (!is.null(city)) {
+        res <- baidu_coord_query(location[x], city[x])
+      } else {
+        res <- baidu_coord_query(location[x])
+      }
       
       # Edit cache variable "queries_left_today" to be one less.
       assign("queries_left_today", (bmap_remaining_daily_queries() - 1L), 
@@ -145,7 +163,11 @@ bmap_get_coords <- function(location, type = c("data.frame", "json"),
       }
       
       # Cache result to coord_hash_map.
-      insert_coord_hash_map(location[x], res)
+      if (is.null(city)) {
+        insert_coord_hash_map(paste0(location[x], "city:", null_str), res)
+      } else {
+        insert_coord_hash_map(paste0(location[x], "city:", city[x]), res)
+      }
       
     }
     
@@ -185,10 +207,13 @@ bmap_get_coords <- function(location, type = c("data.frame", "json"),
 #' Send address/location query to Baidu Maps API, return a lat/lon
 #'
 #' @param location char string, location name or address to query.
+#' @param city char string, city name to add to the api query, indicating 
+#'  the city in which the \code{location} exists. This is an optional arg, 
+#'  default value is \code{NULL}
 #'
 #' @return json obj (as char string) containing the lat/lon return data.
 #' @noRd
-baidu_coord_query <- function(location) {
+baidu_coord_query <- function(location, city = NULL) {
   # Check for presence of chars " " and "#", as either will produce errors 
   # if sent to the Baidu Maps API. Find and eliminate them.
   if (any(grepl(' |#', location))) {
@@ -197,7 +222,7 @@ baidu_coord_query <- function(location) {
   
   # Compile query URL.
   uri <- sprintf(
-    get_coords_query_uri(location), get("bmap_key", envir = bmap_env)
+    get_coords_query_uri(location, city), get("bmap_key", envir = bmap_env)
   )
   
   # query

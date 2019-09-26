@@ -17,35 +17,63 @@ void from_json_addrs(std::string& json, std::string& key) {
     stop("json parse error");
   }
   
+  // Get MemberEnd() iterator.
+  rapidjson::Value::ConstMemberIterator addr_comp_end = global_vars::doc["result"]["addressComponent"].MemberEnd();
+  
   // Input lon and input lat (if "key" is not "NA").
   if(key != "NA") {
     get_coords_from_uri(key);
   }
   
   // Return lon.
-  if(global_vars::doc["result"]["location"].HasMember("lng")) {
-    global_vars::lng[0] = global_vars::doc["result"]["location"]["lng"].GetDouble();
+  global_vars::iter = global_vars::doc["result"]["location"].FindMember("lng");
+  if (global_vars::iter != global_vars::doc["result"]["location"].MemberEnd()) {
+    global_vars::lng[0] = global_vars::iter->value.GetDouble();
   } else {
     global_vars::lng[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc["result"]["location"].HasMember("lng")) {
+  global_vars::lng[0] = global_vars::doc["result"]["location"]["lng"].GetDouble();
+  } else {
+  global_vars::lng[0] = NA_REAL;
+  }
+  */
   
   // Return lat.
-  if(global_vars::doc["result"]["location"].HasMember("lat")) {
-    global_vars::lat[0] = global_vars::doc["result"]["location"]["lat"].GetDouble();
+  global_vars::iter = global_vars::doc["result"]["location"].FindMember("lat");
+  if (global_vars::iter != global_vars::doc["result"]["location"].MemberEnd()) {
+    global_vars::lat[0] = global_vars::iter->value.GetDouble();
   } else {
     global_vars::lat[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc["result"]["location"].HasMember("lat")) {
+  global_vars::lat[0] = global_vars::doc["result"]["location"]["lat"].GetDouble();
+  } else {
+  global_vars::lat[0] = NA_REAL;
+  }
+  */
   
   // status
-  if(global_vars::doc.HasMember("status")) {
-    global_vars::status[0] = global_vars::doc["status"].GetDouble();
+  global_vars::iter = global_vars::doc.FindMember("status");
+  if (global_vars::iter != global_vars::doc.MemberEnd()) {
+    global_vars::status[0] = global_vars::iter->value.GetDouble();
   } else {
     global_vars::status[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc.HasMember("status")) {
+  global_vars::status[0] = global_vars::doc["status"].GetDouble();
+  } else {
+  global_vars::status[0] = NA_REAL;
+  }
+  */
   
   // formatted_address.
-  if(global_vars::doc["result"].HasMember("formatted_address")) {
-    addr_vars::temp_str = global_vars::doc["result"]["formatted_address"].GetString();
+  global_vars::iter = global_vars::doc["result"].FindMember("formatted_address");
+  if (global_vars::iter != global_vars::doc["result"].MemberEnd()) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::formatted_address = addr_vars::temp_str;
     } else {
@@ -54,10 +82,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::formatted_address = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"].HasMember("formatted_address")) {
+  addr_vars::temp_str = global_vars::doc["result"]["formatted_address"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::formatted_address = addr_vars::temp_str;
+  } else {
+  addr_vars::formatted_address = NA_STRING;
+  }
+  } else {
+  addr_vars::formatted_address = NA_STRING;
+  }
+  */
   
   // business.
-  if(global_vars::doc["result"].HasMember("business")) {
-    addr_vars::temp_str = global_vars::doc["result"]["business"].GetString();
+  global_vars::iter = global_vars::doc["result"].FindMember("business");
+  if (global_vars::iter != global_vars::doc["result"].MemberEnd()) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::business = addr_vars::temp_str;
     } else {
@@ -66,10 +107,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::business = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"].HasMember("business")) {
+  addr_vars::temp_str = global_vars::doc["result"]["business"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::business = addr_vars::temp_str;
+  } else {
+  addr_vars::business = NA_STRING;
+  }
+  } else {
+  addr_vars::business = NA_STRING;
+  }
+  */
   
   // country.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("country")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["country"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("country");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::country = addr_vars::temp_str;
     } else {
@@ -78,17 +132,38 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::country = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("country")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["country"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::country = addr_vars::temp_str;
+  } else {
+  addr_vars::country = NA_STRING;
+  }
+  } else {
+  addr_vars::country = NA_STRING;
+  }
+  */
   
   // country_code.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("country_code")) {
-    addr_vars::country_code[0] = global_vars::doc["result"]["addressComponent"]["country_code"].GetDouble();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("country_code");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::country_code[0] = global_vars::iter->value.GetDouble();
   } else {
     addr_vars::country_code[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("country_code")) {
+  addr_vars::country_code[0] = global_vars::doc["result"]["addressComponent"]["country_code"].GetDouble();
+  } else {
+  addr_vars::country_code[0] = NA_REAL;
+  }
+  */
   
   // country_code_iso.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("country_code_iso")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["country_code_iso"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("country_code_iso");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::country_code_iso = addr_vars::temp_str;
     } else {
@@ -97,10 +172,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::country_code_iso = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("country_code_iso")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["country_code_iso"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::country_code_iso = addr_vars::temp_str;
+  } else {
+  addr_vars::country_code_iso = NA_STRING;
+  }
+  } else {
+  addr_vars::country_code_iso = NA_STRING;
+  }
+  */
   
   // country_code_iso2.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("country_code_iso2")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["country_code_iso2"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("country_code_iso2");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::country_code_iso2 = addr_vars::temp_str;
     } else {
@@ -109,10 +197,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::country_code_iso2 = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("country_code_iso2")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["country_code_iso2"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::country_code_iso2 = addr_vars::temp_str;
+  } else {
+  addr_vars::country_code_iso2 = NA_STRING;
+  }
+  } else {
+  addr_vars::country_code_iso2 = NA_STRING;
+  }
+  */
   
   // province.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("province")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["province"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("province");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::province = addr_vars::temp_str;
     } else {
@@ -121,10 +222,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::province = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("province")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["province"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::province = addr_vars::temp_str;
+  } else {
+  addr_vars::province = NA_STRING;
+  }
+  } else {
+  addr_vars::province = NA_STRING;
+  }
+  */
   
   // city.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("city")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["city"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("city");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::city = addr_vars::temp_str;
     } else {
@@ -133,17 +247,38 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::city = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("city")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["city"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::city = addr_vars::temp_str;
+  } else {
+  addr_vars::city = NA_STRING;
+  }
+  } else {
+  addr_vars::city = NA_STRING;
+  }
+  */
   
   // city_level.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("city_level")) {
-    addr_vars::city_level[0] = global_vars::doc["result"]["addressComponent"]["city_level"].GetDouble();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("city_level");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::city_level[0] = global_vars::iter->value.GetDouble();
   } else {
     addr_vars::city_level[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("city_level")) {
+  addr_vars::city_level[0] = global_vars::doc["result"]["addressComponent"]["city_level"].GetDouble();
+  } else {
+  addr_vars::city_level[0] = NA_REAL;
+  }
+  */
   
   // district.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("district")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["district"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("district");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::district = addr_vars::temp_str;
     } else {
@@ -152,10 +287,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::district = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("district")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["district"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::district = addr_vars::temp_str;
+  } else {
+  addr_vars::district = NA_STRING;
+  }
+  } else {
+  addr_vars::district = NA_STRING;
+  }
+  */
   
   // town.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("town")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["town"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("town");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::town = addr_vars::temp_str;
     } else {
@@ -164,10 +312,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::town = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("town")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["town"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::town = addr_vars::temp_str;
+  } else {
+  addr_vars::town = NA_STRING;
+  }
+  } else {
+  addr_vars::town = NA_STRING;
+  }
+  */
   
   // adcode.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("adcode")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["adcode"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("adcode");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::ad_code[0] = stoi(addr_vars::temp_str);
     } else {
@@ -176,10 +337,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::ad_code[0] = NA_INTEGER;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("adcode")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["adcode"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::ad_code[0] = stoi(addr_vars::temp_str);
+  } else {
+  addr_vars::ad_code[0] = NA_INTEGER;
+  }
+  } else {
+  addr_vars::ad_code[0] = NA_INTEGER;
+  }
+  */
   
   // street.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("street")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["street"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("street");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::street = addr_vars::temp_str;
     } else {
@@ -188,10 +362,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::street = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("street")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["street"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::street = addr_vars::temp_str;
+  } else {
+  addr_vars::street = NA_STRING;
+  }
+  } else {
+  addr_vars::street = NA_STRING;
+  }
+  */
   
   // street_number.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("street_number")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["street_number"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("street_number");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::street_number = addr_vars::temp_str;
     } else {
@@ -200,10 +387,23 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::street_number = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("street_number")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["street_number"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::street_number = addr_vars::temp_str;
+  } else {
+  addr_vars::street_number = NA_STRING;
+  }
+  } else {
+  addr_vars::street_number = NA_STRING;
+  }
+  */
   
   // direction.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("direction")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["direction"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("direction");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::direction = addr_vars::temp_str;
     } else {
@@ -212,22 +412,48 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::direction = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("direction")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["direction"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::direction = addr_vars::temp_str;
+  } else {
+  addr_vars::direction = NA_STRING;
+  }
+  } else {
+  addr_vars::direction = NA_STRING;
+  }
+  */
   
   // distance.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("distance")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["distance"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("distance");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
-      addr_vars::distance = stoi(addr_vars::temp_str);
+      addr_vars::distance[0] = stoi(addr_vars::temp_str);
     } else {
-      addr_vars::distance = NA_INTEGER;
+      addr_vars::distance[0] = NA_INTEGER;
     }
   } else {
-    addr_vars::distance = NA_INTEGER;
+    addr_vars::distance[0] = NA_INTEGER;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("distance")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["distance"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::distance = stoi(addr_vars::temp_str);
+  } else {
+  addr_vars::distance = NA_INTEGER;
+  }
+  } else {
+  addr_vars::distance = NA_INTEGER;
+  }
+  */
   
   // sematic_description.
-  if(global_vars::doc["result"]["addressComponent"].HasMember("sematic_description")) {
-    addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["sematic_description"].GetString();
+  global_vars::iter = global_vars::doc["result"]["addressComponent"].FindMember("sematic_description");
+  if (global_vars::iter != addr_comp_end) {
+    addr_vars::temp_str = global_vars::iter->value.GetString();
     if(addr_vars::temp_str != "") {
       addr_vars::sematic_desc = addr_vars::temp_str;
     } else {
@@ -236,13 +462,33 @@ void from_json_addrs(std::string& json, std::string& key) {
   } else {
     addr_vars::sematic_desc = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"]["addressComponent"].HasMember("sematic_description")) {
+  addr_vars::temp_str = global_vars::doc["result"]["addressComponent"]["sematic_description"].GetString();
+  if(addr_vars::temp_str != "") {
+  addr_vars::sematic_desc = addr_vars::temp_str;
+  } else {
+  addr_vars::sematic_desc = NA_STRING;
+  }
+  } else {
+  addr_vars::sematic_desc = NA_STRING;
+  }
+  */
   
   // city_code.
-  if(global_vars::doc["result"].HasMember("cityCode")) {
-    addr_vars::city_code[0] = global_vars::doc["result"]["cityCode"].GetDouble();
+  global_vars::iter = global_vars::doc["result"].FindMember("cityCode");
+  if (global_vars::iter != global_vars::doc["result"].MemberEnd()) {
+    addr_vars::city_code[0] = global_vars::iter->value.GetDouble();
   } else {
     addr_vars::city_code[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc["result"].HasMember("cityCode")) {
+  addr_vars::city_code[0] = global_vars::doc["result"]["cityCode"].GetDouble();
+  } else {
+  addr_vars::city_code[0] = NA_REAL;
+  }
+  */
 }
 
 

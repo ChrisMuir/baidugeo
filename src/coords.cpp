@@ -17,54 +17,113 @@ void from_json_coords(std::string& json) {
     stop("json parse error");
   }
   
+  // Get MemberEnd() iterator.
+  rapidjson::Value::ConstMemberIterator res_end = global_vars::doc["result"].MemberEnd();
+  
   // status
-  if(global_vars::doc.HasMember("status")) {
-    global_vars::status[0] = global_vars::doc["status"].GetDouble();
+  global_vars::iter = global_vars::doc.FindMember("status");
+  if (global_vars::iter != global_vars::doc.MemberEnd()) {
+    global_vars::status[0] = global_vars::iter->value.GetDouble();
   } else {
     global_vars::status[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc.HasMember("status")) {
+  global_vars::status[0] = global_vars::doc["status"].GetDouble();
+  } else {
+  global_vars::status[0] = NA_REAL;
+  }
+  */
   
   // longitude
-  if(global_vars::doc["result"]["location"].HasMember("lng")) {
-    global_vars::lng[0] = global_vars::doc["result"]["location"]["lng"].GetDouble();
+  global_vars::iter = global_vars::doc["result"]["location"].FindMember("lng");
+  if (global_vars::iter != global_vars::doc["result"]["location"].MemberEnd()) {
+    global_vars::lng[0] = global_vars::iter->value.GetDouble();
   } else {
     global_vars::lng[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc["result"]["location"].HasMember("lng")) {
+  global_vars::lng[0] = global_vars::doc["result"]["location"]["lng"].GetDouble();
+  } else {
+  global_vars::lng[0] = NA_REAL;
+  }
+  */
   
   // latitude
-  if(global_vars::doc["result"]["location"].HasMember("lat")) {
-    global_vars::lat[0] = global_vars::doc["result"]["location"]["lat"].GetDouble();
+  global_vars::iter = global_vars::doc["result"]["location"].FindMember("lat");
+  if (global_vars::iter != global_vars::doc["result"]["location"].MemberEnd()) {
+    global_vars::lat[0] = global_vars::iter->value.GetDouble();
   } else {
     global_vars::lat[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc["result"]["location"].HasMember("lat")) {
+  global_vars::lat[0] = global_vars::doc["result"]["location"]["lat"].GetDouble();
+  } else {
+  global_vars::lat[0] = NA_REAL;
+  }
+  */
   
   // precise
-  if(global_vars::doc["result"].HasMember("precise")) {
-    coord_vars::precise[0] = global_vars::doc["result"]["precise"].GetInt();
+  global_vars::iter = global_vars::doc["result"].FindMember("precise");
+  if (global_vars::iter != res_end) {
+    coord_vars::precise[0] = global_vars::iter->value.GetInt();
   } else {
     coord_vars::precise[0] = NA_INTEGER;
   }
+  /*
+  if(global_vars::doc["result"].HasMember("precise")) {
+  coord_vars::precise[0] = global_vars::doc["result"]["precise"].GetInt();
+  } else {
+  coord_vars::precise[0] = NA_INTEGER;
+  }
+  */
   
   // confidence
-  if(global_vars::doc["result"].HasMember("confidence")) {
-    coord_vars::confidence[0] = global_vars::doc["result"]["confidence"].GetInt();
+  global_vars::iter = global_vars::doc["result"].FindMember("confidence");
+  if (global_vars::iter != res_end) {
+    coord_vars::confidence[0] = global_vars::iter->value.GetInt();
   } else {
     coord_vars::confidence[0] = NA_INTEGER;
   }
+  /*
+  if(global_vars::doc["result"].HasMember("confidence")) {
+  coord_vars::confidence[0] = global_vars::doc["result"]["confidence"].GetInt();
+  } else {
+  coord_vars::confidence[0] = NA_INTEGER;
+  }
+  */
   
   // comprehension
-  if(global_vars::doc["result"].HasMember("comprehension")) {
-    coord_vars::comprehension[0] = global_vars::doc["result"]["comprehension"].GetDouble();
+  global_vars::iter = global_vars::doc["result"].FindMember("comprehension");
+  if (global_vars::iter != res_end) {
+    coord_vars::comprehension[0] = global_vars::iter->value.GetDouble();
   } else {
     coord_vars::comprehension[0] = NA_REAL;
   }
+  /*
+  if(global_vars::doc["result"].HasMember("comprehension")) {
+  coord_vars::comprehension[0] = global_vars::doc["result"]["comprehension"].GetDouble();
+  } else {
+  coord_vars::comprehension[0] = NA_REAL;
+  }
+  */
   
   // level
-  if(global_vars::doc["result"].HasMember("level")) {
-    coord_vars::level = global_vars::doc["result"]["level"].GetString();
+  global_vars::iter = global_vars::doc["result"].FindMember("level");
+  if (global_vars::iter != res_end) {
+    coord_vars::level = global_vars::iter->value.GetString();
   } else {
     coord_vars::level = NA_STRING;
   }
+  /*
+  if(global_vars::doc["result"].HasMember("level")) {
+  coord_vars::level = global_vars::doc["result"]["level"].GetString();
+  } else {
+  coord_vars::level = NA_STRING;
+  }
+  */
 }
 
 

@@ -4,11 +4,16 @@
 \alias{bmap_get_coords}
 \title{Get Coordinates for a Vector of Locations.}
 \usage{
-bmap_get_coords(location, type = c("data.frame", "json"),
+bmap_get_coords(location, city = NULL, type = c("data.frame", "json"),
   force = FALSE, skip_short_str = FALSE, cache_chunk_size = NULL)
 }
 \arguments{
 \item{location}{char vector, vector of locations.}
+
+\item{city}{char vector, vector of city names to add to the api query, 
+indicating the city in which the \code{location} exists. This is an 
+optional arg, default value is \code{NULL}. If a vector is passed, the 
+length must match that of \code{location}.}
 
 \item{type}{string, dictates the return data type. Valid inputs are 
 \code{data.frame}, which will return a data.frame, or \code{json}, which 
