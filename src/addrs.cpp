@@ -12,9 +12,7 @@ void from_json_addrs(std::string& json, std::string& key) {
   }
   
   if(global_vars::doc.HasParseError()) {
-    //printf("json parse error: %d at %zu\n", static_cast<int>(doc.GetParseError()), doc.GetErrorOffset());
-    Rcerr << "parse error for json string: "<< json << std::endl;
-    stop("json parse error");
+    Rcerr << "parse error for json string: '"<< json << "'" << std::endl;
   }
   
   // Input lon and input lat (if "key" is not "NA").
