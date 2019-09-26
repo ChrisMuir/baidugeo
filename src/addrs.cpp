@@ -481,7 +481,11 @@ List get_addrs_pkg_data(Environment& addr_hash_map,
   
   out.attr("names") = names;
   out.attr("class") = "data.frame";
-  out.attr("row.names") = seq(1, cache_len);
+  if(cache_len > 0) {
+    out.attr("row.names") = seq(1, cache_len);
+  } else {
+    out.attr("row.names") = 0;
+  }
   
   return out;
 }

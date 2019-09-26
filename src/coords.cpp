@@ -163,7 +163,11 @@ List get_coords_pkg_data(Environment& coord_hash_map,
   );
   
   out.attr("class") = "data.frame";
-  out.attr("row.names") = seq(1, cache_len);
+  if(cache_len > 0) {
+    out.attr("row.names") = seq(1, cache_len);
+  } else {
+    out.attr("row.names") = 0;
+  }
   
   return out;
 }
