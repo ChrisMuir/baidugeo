@@ -116,8 +116,20 @@ bmap_get_location <- function(lat, lon, type = c("data.frame", "json"),
              envir = bmap_env)
       
       # If API key is invalid, throw error.
-      if (grepl("message", res) && !grepl('\"lng\"', res)) {
+      if (invalid_key(res)) {
         stop(invalid_key_msg(res), call. = FALSE)
+      }
+      
+      # If API response contains "APP 服务被禁用", try flipping the API version
+      # and making the call again. If that returns "APP 服务被禁用", throw 
+      # error.
+      if (key_api_version_incompatible(res)) {
+        flip_api_version()
+        uri <- get_addr_query_uri(lon[x], lat[x])
+        res <- baidu_location_query(uri)
+        if (key_api_version_incompatible(res)) {
+          stop(key_api_version_incompatible_msg(), call. = FALSE)
+        }
       }
       
       # Assign res to output vector.

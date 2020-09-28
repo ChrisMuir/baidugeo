@@ -4,8 +4,13 @@
 \alias{bmap_get_location}
 \title{Get Location for a Vector of lat/lon coordinates.}
 \usage{
-bmap_get_location(lat, lon, type = c("data.frame", "json"),
-  force = FALSE, cache_chunk_size = NULL)
+bmap_get_location(
+  lat,
+  lon,
+  type = c("data.frame", "json"),
+  force = FALSE,
+  cache_chunk_size = NULL
+)
 }
 \arguments{
 \item{lat}{numeric vector, vector of latitude values.}

@@ -120,17 +120,23 @@ bmap_get_coords <- function(location, type = c("data.frame", "json"),
              envir = bmap_env)
       
       # If API key is invalid, throw error.
-      if (grepl("message", res) && !grepl('\"lng\"', res)) {
+      if (invalid_key(res)) {
         stop(invalid_key_msg(res), call. = FALSE)
+      }
+      
+      # If API response contains "APP 服务被禁用", try flipping the API version
+      # and making the call again. If that returns "APP 服务被禁用", throw 
+      # error.
+      if (key_api_version_incompatible(res)) {
+        flip_api_version()
+        res <- baidu_coord_query(location[x])
+        if (key_api_version_incompatible(res)) {
+          stop(key_api_version_incompatible_msg(), call. = FALSE)
+        }
       }
       
       # Assign res to output vector.
       out[x] <- res
-      
-      # If API key is invalid, throw error.
-      if (grepl("message", res) && !grepl('\"lng\"', res)) {
-        stop(invalid_key_msg(res), call. = FALSE)
-      }
       
       # If there was a connection error or http status code 302, do not cache 
       # the result to addr_hash_map.

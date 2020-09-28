@@ -4,8 +4,13 @@
 \alias{bmap_get_coords}
 \title{Get Coordinates for a Vector of Locations.}
 \usage{
-bmap_get_coords(location, type = c("data.frame", "json"),
-  force = FALSE, skip_short_str = FALSE, cache_chunk_size = NULL)
+bmap_get_coords(
+  location,
+  type = c("data.frame", "json"),
+  force = FALSE,
+  skip_short_str = FALSE,
+  cache_chunk_size = NULL
+)
 }
 \arguments{
 \item{location}{char vector, vector of locations.}
