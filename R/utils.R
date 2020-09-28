@@ -40,7 +40,7 @@ get_addr_query_uri <- function(lon, lat) {
     )
   } else {
     uri <- paste0(
-      "http://api.map.baidu.com/geocoding/v3/?ak=", 
+      "http://api.map.baidu.com/reverse_geocoding/v3/?ak=", 
       "%s", 
       "&location=", 
       lat, 
