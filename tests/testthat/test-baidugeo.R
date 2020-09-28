@@ -33,3 +33,11 @@ test_that("invalid key msg is correct", {
            "len of str is 3 or fewer chars")
   )
 })
+
+context("flip_api_versoin")
+
+test_that("flip_api_version correctly flips the api version env var", {
+  assign("api_key_version", "v3", envir = bmap_env)
+  flip_api_version()
+  expect_equal(get_api_version(), "v2")
+})

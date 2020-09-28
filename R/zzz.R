@@ -6,6 +6,7 @@ assign("bmap_daily_rate_limit", 5950L, envir = bmap_env)
 assign("queries_left_today", 5950L, envir = bmap_env)
 assign("next_limit_reset", NULL, envir = bmap_env)
 assign("time_of_last_query", Sys.time(), envir = bmap_env)
+assign("api_key_version", "v2", envir = bmap_env)
 
 # Initialize placeholders for package data within bmap_env.
 assign("coord_hash_map", NULL, envir = bmap_env)
